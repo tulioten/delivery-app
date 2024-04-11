@@ -1,0 +1,9 @@
+{
+  "extends": [
+    "@rocketseat/eslint-config/next"
+  ],
+  "rules": {
+    "no-new": "off"
+  }
+
+}
