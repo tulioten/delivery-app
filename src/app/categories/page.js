@@ -7,7 +7,7 @@ import { useEffect, useState } from 'react'
 import toast from 'react-hot-toast'
 
 export default function CategoriesPage() {
-  const [newCategoryName, setNewCategoryName] = useState('')
+  const [CategoryName, setCategoryName] = useState('')
   const [categories, setCategories] = useState([])
   const [editedCategory, setEditedCategory] = useState(null)
   const { loading: profileLoading, data: profileData } = useProfile()
@@ -24,17 +24,45 @@ export default function CategoriesPage() {
     })
   }
 
-  async function handleNewCategorySubmit(ev) {
+  // async function handleNewCategorySubmit(ev) {
+  //   ev.preventDefault()
+  //   const creationPromise = new Promise(async (resolve, reject) => {
+  //     const response = await fetch('/api/categories', {
+  //       method: 'POST',
+  //       headers: { 'Content-Type': 'application/json' },
+  //       body: JSON.stringify({ name: CategoryName }),
+  //     })
+  //     setCategoryName('')
+  //     fetchCategories()
+  //     if (response.ok) {
+  //       resolve()
+  //     } else {
+  //       reject(console.error('Unexpected Error'))
+  //     }
+  //   })
+  //   await toast.promise(creationPromise, {
+  //     loading: 'Creating your new category...',
+  //     success: 'Category created successfully',
+  //     error: 'Error, sorry...',
+  //   })
+  // }
+  // ############----SEM ASYNC IN PROMISE----#############
+  async function handleCategorySubmit(ev) {
     ev.preventDefault()
     const creationPromise = new Promise((resolve, reject) => {
+      const data = { name: CategoryName }
+      if (editedCategory) {
+        data._id = editedCategory._id
+      }
       const waitingResponse = async () => {
         const response = await fetch('/api/categories', {
-          method: 'POST',
+          method: editedCategory ? 'PUT' : 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ name: newCategoryName }),
+          body: JSON.stringify(data),
         })
-        setNewCategoryName('')
+        setCategoryName('')
         fetchCategories()
+        setCategoryName('')
         if (response.ok) {
           return resolve()
         } else {
@@ -44,8 +72,12 @@ export default function CategoriesPage() {
       waitingResponse()
     })
     await toast.promise(creationPromise, {
-      loading: 'Creating your new category...',
-      success: 'Category created successfully',
+      loading: editedCategory
+        ? 'Updating Category'
+        : 'Creating your new category...',
+      success: editedCategory
+        ? 'Category Updated'
+        : 'Category created successfully',
       error: 'Error, sorry...',
     })
   }
@@ -61,14 +93,19 @@ export default function CategoriesPage() {
   return (
     <section className=" mt-8 max-w-lg mx-auto ">
       <UserTabs isAdmin={true} />
-      <form className="mt-8" onSubmit={handleNewCategorySubmit}>
+      <form className="mt-8" onSubmit={handleCategorySubmit}>
         <div className="flex gap-2 items-end">
           <div className="grow">
             <label>{editedCategory ? 'Edit Category' : 'New category'}</label>
+            {editedCategory && (
+              <>
+                : <strong>{editedCategory.name}</strong>
+              </>
+            )}
             <input
               type="text"
-              value={newCategoryName}
-              onChange={(ev) => setNewCategoryName(ev.target.value)}
+              value={CategoryName}
+              onChange={(ev) => setCategoryName(ev.target.value)}
             />
           </div>
           <div className="pb-2">
@@ -83,7 +120,10 @@ export default function CategoriesPage() {
         {categories?.length > 0 &&
           categories.map((cat) => (
             <button
-              onClick={setEditedCategory(cat)}
+              onClick={() => {
+                setEditedCategory(cat)
+                setCategoryName(cat.name)
+              }}
               className="flex bg-gray-200 rounded-xl p-2 px-4 mb-2 gap-2 cursor-pointer"
             >
               <span>{cat.name}</span>
