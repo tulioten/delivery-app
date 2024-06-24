@@ -62,7 +62,7 @@ export default function CategoriesPage() {
         })
         setCategoryName('')
         fetchCategories()
-        setCategoryName('')
+        setEditedCategory(null)
         if (response.ok) {
           return resolve()
         } else {

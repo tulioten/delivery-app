@@ -8,7 +8,7 @@ export async function POST(req) {
 
 export async function PUT(req) {
   const { _id, name } = await req.json()
-  await Category.updateOne({ _id, name })
+  await Category.updateOne({ _id }, { name })
   return Response.json(true)
 }
 
