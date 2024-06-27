@@ -1,11 +1,11 @@
 'use client'
 
-import Image from 'next/image'
 import { useSession } from 'next-auth/react'
 import { redirect } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import toast from 'react-hot-toast'
 import UserTabs from '@/components/layout/UserTabs'
+import EditableImage from '@/components/layout/EditableImage'
 
 export default function ProfilePage() {
   const session = useSession()
@@ -68,32 +68,6 @@ export default function ProfilePage() {
     })
   }
 
-  async function handleProfileImage(ev) {
-    const files = ev.target.files
-    if (files?.length === 1) {
-      const data = new FormData()
-      data.set('files', files[0])
-
-      const uploadPromise = fetch('/api/upload', {
-        method: 'POST',
-        body: data,
-      }).then((response) => {
-        if (response.ok) {
-          return response.json().then((profileImageLink) => {
-            setUserImage(profileImageLink)
-          })
-        }
-        throw new Error('Something went wrong')
-      })
-
-      await toast.promise(uploadPromise, {
-        loading: 'Uploading...',
-        success: 'Upload successfully!',
-        error: 'Error Uploading Image!',
-      })
-    }
-  }
-
   if (status === 'loading' || !profileFetched) {
     return 'Loading...'
   }
@@ -109,25 +83,7 @@ export default function ProfilePage() {
         <div className="flex gap-4">
           <div>
             <div className="p-2  rounded-lg relative">
-              {userImage && (
-                <Image
-                  className="rounded-full w-full h-full mb-1"
-                  alt="Avatar"
-                  src={userImage}
-                  width={250}
-                  height={250}
-                />
-              )}
-              <label>
-                <input
-                  type="file"
-                  className="hidden"
-                  onChange={handleProfileImage}
-                />
-                <span className="mt-2 block p-1 border border-gray-300 rounded-lg text-center cursor-pointer">
-                  Edit
-                </span>
-              </label>
+              <EditableImage link={userImage} setLink={setUserImage} />
             </div>
           </div>
           <form className="grow" onSubmit={handleProfileInfoUpdate}>

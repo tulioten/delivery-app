@@ -24,29 +24,6 @@ export default function CategoriesPage() {
     })
   }
 
-  // async function handleNewCategorySubmit(ev) {
-  //   ev.preventDefault()
-  //   const creationPromise = new Promise(async (resolve, reject) => {
-  //     const response = await fetch('/api/categories', {
-  //       method: 'POST',
-  //       headers: { 'Content-Type': 'application/json' },
-  //       body: JSON.stringify({ name: CategoryName }),
-  //     })
-  //     setCategoryName('')
-  //     fetchCategories()
-  //     if (response.ok) {
-  //       resolve()
-  //     } else {
-  //       reject(console.error('Unexpected Error'))
-  //     }
-  //   })
-  //   await toast.promise(creationPromise, {
-  //     loading: 'Creating your new category...',
-  //     success: 'Category created successfully',
-  //     error: 'Error, sorry...',
-  //   })
-  // }
-  // ############----SEM ASYNC IN PROMISE----#############
   async function handleCategorySubmit(ev) {
     ev.preventDefault()
     const creationPromise = new Promise((resolve, reject) => {
