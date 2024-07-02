@@ -20,7 +20,8 @@ export default function UserTabs({ isAdmin }) {
           </Link>
 
           <Link
-            className={path === '/menu-items' ? 'active' : ''}
+            className={/menu-items/.test(path) ? 'active' : ''}
+            // className={path.includes('menu-items') ? 'active' : ''}
             href={'/menu-items'}
           >
             Menu Items

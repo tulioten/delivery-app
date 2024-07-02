@@ -40,11 +40,13 @@ export default function EditableImage({ link, setLink }) {
         />
       )}
       {!link && (
-        <div className="bg-gray-200 p-4 text-gray-500 rounded-lg">No Image</div>
+        <div className="text-center bg-gray-200 p-4 text-gray-500 rounded-lg content-center">
+          No Image
+        </div>
       )}
       <label>
         <input type="file" className="hidden" onChange={handleImageFile} />
-        <span className="mt-2 block p-1 border border-gray-300 rounded-lg text-center cursor-pointer">
+        <span className="mt-2 block p-1 border border-gray-300 bg-gray-200 rounded-lg text-center cursor-pointer hover:bg-red-200">
           Edit
         </span>
       </label>

@@ -101,7 +101,7 @@ export default function CategoriesPage() {
                 setEditedCategory(cat)
                 setCategoryName(cat.name)
               }}
-              className="flex bg-gray-200 rounded-xl p-2 px-4 mb-2 gap-2 cursor-pointer"
+              className="flex bg-gray-200 rounded-xl p-2 px-4 mb-2 gap-2 cursor-pointer hover:bg-red-200"
             >
               <span>{cat.name}</span>
             </button>
