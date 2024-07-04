@@ -2,24 +2,19 @@
 
 import { useProfile } from '@/components/UseProfile'
 import UserTabs from '@/components/layout/UserTabs'
-import EditableImage from '@/components/layout/EditableImage'
 import { redirect } from 'next/navigation'
 import { useState } from 'react'
 import toast from 'react-hot-toast'
 import Link from 'next/link'
 import Left from '@/components/icons/LeftArrow'
+import MenuItemForm from '@/components/layout/MenuItemForm'
 
 export default function NewMenuItemPage() {
-  const [image, setImage] = useState('')
-  const [name, setName] = useState('')
-  const [description, setDescription] = useState('')
-  const [basePrice, setBasePrice] = useState('')
   const [redirectToItems, setRedirectToItems] = useState(false)
   const { loading, data } = useProfile()
 
-  async function handleMenuSubmit(ev) {
+  async function handleMenuSubmit(ev, data) {
     ev.preventDefault()
-    const data = { image, name, description, basePrice }
     const savingPromise = new Promise((resolve, reject) => {
       const waitingResponse = async () => {
         const response = await fetch('/api/menu-items', {
@@ -34,10 +29,6 @@ export default function NewMenuItemPage() {
           reject(console.error('Unexpected Error'))
         }
       }
-      setImage('')
-      setName('')
-      setDescription('')
-      setBasePrice('')
       waitingResponse()
     })
     await toast.promise(savingPromise, {
@@ -74,37 +65,7 @@ export default function NewMenuItemPage() {
             <span>Show all menu items</span>
           </Link>
         </div>
-        <form onSubmit={handleMenuSubmit} className="mt-8 max-w-md mx-auto">
-          <div
-            className="grid items-start gap-4"
-            style={{ gridTemplateColumns: '.3fr .7fr' }}
-          >
-            <div>
-              <EditableImage link={image} setLink={setImage} />
-            </div>
-            <div className="grow">
-              <label>Item name</label>
-              <input
-                type="text"
-                value={name}
-                onChange={(ev) => setName(ev.target.value)}
-              />
-              <label>Description</label>
-              <input
-                type="text"
-                value={description}
-                onChange={(ev) => setDescription(ev.target.value)}
-              />
-              <label>Base Price</label>
-              <input
-                type="text"
-                value={basePrice}
-                onChange={(ev) => setBasePrice(ev.target.value)}
-              />
-              <button type="submit">Save</button>
-            </div>
-          </div>
-        </form>
+        <MenuItemForm onSubmit={handleMenuSubmit} menuItem={null} />
       </section>
     </div>
   )

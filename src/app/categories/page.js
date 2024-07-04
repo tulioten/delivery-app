@@ -1,5 +1,8 @@
 'use client'
 
+import Trash from '@/components/icons/Trash'
+import Edit from '@/components/icons/Edit'
+import BackArrow from '@/components/icons/BackArrow'
 import UserTabs from '@/components/layout/UserTabs'
 import { useProfile } from '@/components/UseProfile'
 import { redirect } from 'next/navigation'
@@ -59,6 +62,30 @@ export default function CategoriesPage() {
     })
   }
 
+  async function handleDeleteClick(_id) {
+    const deletingPromise = new Promise((resolve, reject) => {
+      const waitingResponse = async () => {
+        const response = await fetch('/api/categories?_id=' + _id, {
+          method: 'DELETE',
+        })
+        if (response.ok) {
+          return resolve()
+        } else {
+          reject(console.error('Try Again'))
+        }
+      }
+      waitingResponse()
+    })
+
+    await toast.promise(deletingPromise, {
+      loading: 'Deleting Category',
+      success: 'Category Deleted',
+      error: 'Sorry, try again',
+    })
+
+    fetchCategories()
+  }
+
   if (profileLoading) {
     return 'Loading user info...'
   }
@@ -85,26 +112,53 @@ export default function CategoriesPage() {
               onChange={(ev) => setCategoryName(ev.target.value)}
             />
           </div>
-          <div className="pb-2">
+          <div className="pb-2 flex gap-2">
             <button className="border border-primary" type="submit">
               {editedCategory ? 'Update' : 'Create'}
+            </button>
+            <button
+              className="border border-primary bg-primary text-white px-2"
+              type="button"
+              onClick={() => {
+                setEditedCategory(null)
+                setCategoryName('')
+              }}
+            >
+              <BackArrow />
             </button>
           </div>
         </div>
       </form>
       <div>
-        <h2 className="mt-4 mb-1 text-sm text-gray-500">Edit category:</h2>
+        <h2 className="mt-4 mb-1 text-sm text-gray-500">Categories:</h2>
         {categories?.length > 0 &&
           categories.map((cat) => (
-            <button
-              onClick={() => {
-                setEditedCategory(cat)
-                setCategoryName(cat.name)
-              }}
-              className="flex bg-gray-200 rounded-xl p-2 px-4 mb-2 gap-2 cursor-pointer hover:bg-red-200"
-            >
-              <span>{cat.name}</span>
-            </button>
+            <div className="flex bg-gray-200 rounded-xl p-2 px-4 mb-2 gap-2 items-center">
+              <div className="grow hover:underline cursor-pointer">
+                {cat.name}
+              </div>
+              <div className="flex gap-2">
+                <button
+                  onClick={() => {
+                    setEditedCategory(cat)
+                    setCategoryName(cat.name)
+                  }}
+                  className="px-2"
+                  type="button"
+                >
+                  <Edit />
+                </button>
+                <button
+                  onClick={() => {
+                    handleDeleteClick(cat._id)
+                  }}
+                  className="px-2"
+                  type="button"
+                >
+                  <Trash />
+                </button>
+              </div>
+            </div>
           ))}
       </div>
     </section>
