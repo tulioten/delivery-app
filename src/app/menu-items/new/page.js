@@ -56,7 +56,7 @@ export default function NewMenuItemPage() {
     <div>
       <section className="mt-8">
         <UserTabs isAdmin={true} />
-        <div className="max-w-md mx-auto mt-8 ">
+        <div className="max-w-lg mx-auto mt-8 ">
           <Link
             className="button bg-gray-200 hover:bg-red-200 "
             href={'/menu-items'}

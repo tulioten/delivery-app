@@ -1,5 +1,6 @@
 'use client'
 import { useProfile } from '@/components/UseProfile'
+import DeleteButton from '@/components/DeleteButton'
 import UserTabs from '@/components/layout/UserTabs'
 import MenuItemForm from '@/components/layout/MenuItemForm'
 import { redirect, useParams } from 'next/navigation'
@@ -90,7 +91,7 @@ export default function EditMenu() {
     <div>
       <section className="mt-8">
         <UserTabs isAdmin={true} />
-        <div className="max-w-md mx-auto mt-8 ">
+        <div className="max-w-lg mx-auto mt-8 ">
           <Link
             className="button bg-gray-200 hover:bg-red-200 "
             href={'/menu-items'}
@@ -100,9 +101,18 @@ export default function EditMenu() {
           </Link>
         </div>
         <MenuItemForm menuItem={menuItem} onSubmit={handleMenuSubmit} />
-        <div className="max-w-md mx-auto mt-2">
-          <div className="max-w-xs ml-auto pl-4">
-            <button onClick={handleDeleteClick}>Delete</button>
+        <div className="max-w-lg mx-auto">
+          <div
+            className="grid items-start gap-4 mt-2 mx-auto"
+            style={{ gridTemplateColumns: '.3fr .7fr' }}
+          >
+            <div className="grow mx-auto mt-2"></div>
+            <div className="max-w-sm">
+              <DeleteButton
+                label="Delete"
+                onDelete={() => handleDeleteClick()}
+              />
+            </div>
           </div>
         </div>
       </section>

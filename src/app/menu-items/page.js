@@ -28,7 +28,7 @@ export default function MenuItemsPage() {
   }
 
   return (
-    <section className="mt-8 max-w-md mx-auto">
+    <section className="mt-8 max-w-lg mx-auto">
       <UserTabs isAdmin={true} />
       <div className="mt-8">
         <Link
@@ -46,18 +46,18 @@ export default function MenuItemsPage() {
             menuItems.map((item) => (
               <Link
                 href={'/menu-items/edit/' + item._id}
-                className="bg-gray-200 rounded-lg p-4 hover:bg-red-200"
+                className="flex flex-col bg-gray-200 rounded-lg p-4 hover:bg-red-200"
               >
-                <div className="relative">
+                <div className="flex-grow">
                   <Image
                     src={item.image}
                     alt={'Item image'}
                     width={200}
                     height={200}
-                    className="rounded-md"
+                    className="rounded-md object-contain"
                   />
                 </div>
-                <div className="text-center">{item.name}</div>
+                <div className="text-center ">{item.name}</div>
               </Link>
             ))}
         </div>

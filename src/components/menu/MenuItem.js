@@ -1,22 +1,49 @@
-export default function MenuItem() {
-  return (
-    <div className="bg-gray-200 p-4 rounded-lg text-center hover:bg-red-200 hover:shadow-md hover:shadow-black/25 transition-all">
-      <div className="text-center">
-        <img
-          src="/pizza.png"
-          alt="pizza"
-          className="max-w-auto max-h-36 block mx-auto "
-        />
-      </div>
+import { useContext, useState } from 'react'
+import { CartContext } from '../AppContext'
+import MenuItemTile from '@/components/menu/MenuItemTile'
+import toast from 'react-hot-toast'
+import Image from 'next/image'
 
-      <h4 className="font-semibold text-xl my-2">Pepperoni Pizza</h4>
-      <p className="text-gray-500 text-sm">
-        Lorem ipsum dolor sit amet, consectetur adipisicing elit
-      </p>
-      <button className="bg-primary text-white py-2 font-semibold px-4  mt-2 rounded-full">
-        {' '}
-        Add to cart $12
-      </button>
-    </div>
+export default function MenuItem(menuItem) {
+  const { image, name, description, basePrice, sizes, extraIngredients } =
+    menuItem
+  const [showPopUp, setShowPopUp] = useState(false)
+  const { addToCart } = useContext(CartContext)
+
+  function handleAddToCartButton() {
+    if (sizes.length === 0 && extraIngredients.length === 0) {
+      addToCart(menuItem)
+      toast.success('Added to cart!')
+    } else {
+      setShowPopUp(true)
+    }
+  }
+
+  return (
+    <>
+      {showPopUp && (
+        <div className="fixed inset-0 bg-black/80 flex items-center justify-center">
+          <div className="bg-white p-6 rounded-lg">
+            <Image
+              src={image}
+              alt={name}
+              width={300}
+              height={300}
+              className="mx-auto"
+            />
+            <h2 className="text-lg font-bold text-center mb-4">{name}</h2>
+            <p className="text-center text-gray-500 text-sm mb-2">
+              {description}
+            </p>
+            {sizes.length > 0 && (
+              <div className="bg-gray-200 rounded-md text-center p-2">
+                <h3>Pick your Size</h3>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+      <MenuItemTile props={handleAddToCartButton} {...menuItem} />
+    </>
   )
 }
