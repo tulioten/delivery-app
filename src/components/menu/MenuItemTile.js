@@ -1,5 +1,8 @@
+import AddToCartButton from './AddToCartButton'
+
 export default function MenuItemTile({ props, ...item }) {
-  const { image, name, description, basePrice } = item
+  const { image, name, description, basePrice, sizes, extraIngredients } = item
+  const hasSizesOrExtras = sizes?.length > 0 || extraIngredients?.length > 0
   return (
     <div className="bg-gray-200 p-4 flex flex-col rounded-lg text-center group hover:bg-red-200 hover:shadow-md hover:shadow-black/25 transition-all">
       <div className="text-center">
@@ -15,13 +18,12 @@ export default function MenuItemTile({ props, ...item }) {
         <p className="text-gray-500 text-sm my-2 line-clamp-3">{description}</p>
       </div>
       <div className="flex-1 flex items-end ">
-        <button
-          type="button"
+        <AddToCartButton
+          hasSizesOrExtras={hasSizesOrExtras}
           onClick={props}
-          className="bg-primary text-white py-2 font-semibold px-4  mt-2 rounded-full"
-        >
-          Add to cart for ${basePrice}
-        </button>
+          basePrice={basePrice}
+          image={image}
+        />
       </div>
     </div>
   )

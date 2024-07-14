@@ -52,8 +52,11 @@ export default function Header() {
             </Link>
           </>
         )}
-        <Link className="" href={'/cart'}>
-          <ShoppingCart /> ({cartProducts.length})
+        <Link className="relative" href={'/cart'}>
+          <ShoppingCart />
+          <span className="absolute -top-2 -right-4 bg-primary text-white text-sm py-1 px-1 rounded-full leading-3 ">
+            {cartProducts.length}
+          </span>
         </Link>
       </nav>
     </header>
