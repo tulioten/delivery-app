@@ -6,11 +6,11 @@ import { usePathname } from 'next/navigation'
 export default function UserTabs({ isAdmin }) {
   const path = usePathname()
   return (
-    <div className="flex gap-2 mx-auto  justify-center tabs">
+    <div className="flex gap-2 mx-auto  justify-center tabs flex-wrap">
       <Link className={path === '/profile' ? 'active' : ''} href={'/profile'}>
         Profile
       </Link>
-      {{ isAdmin } && (
+      {isAdmin && (
         <>
           <Link
             className={path === '/categories' ? 'active' : ''}
@@ -32,11 +32,14 @@ export default function UserTabs({ isAdmin }) {
           >
             Users
           </Link>
-          <Link className={path === '/orders' ? 'active' : ''} href={'/orders'}>
-            Orders
-          </Link>
         </>
       )}
+      <Link
+        className={path.includes('/orders') ? 'active' : ''}
+        href={'/orders'}
+      >
+        Orders
+      </Link>
     </div>
   )
 }

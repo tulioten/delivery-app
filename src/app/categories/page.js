@@ -97,7 +97,7 @@ export default function CategoriesPage() {
 
   return (
     <section className=" mt-8 max-w-lg mx-auto ">
-      <UserTabs isAdmin={true} />
+      <UserTabs isAdmin={profileData.admin} />
       <form className="mt-8" onSubmit={handleCategorySubmit}>
         <div className="flex gap-2 items-end">
           <div className="grow">
@@ -134,7 +134,10 @@ export default function CategoriesPage() {
         <h2 className="mt-4 mb-1 text-sm text-gray-500">Categories:</h2>
         {categories?.length > 0 &&
           categories.map((cat) => (
-            <div className="flex bg-gray-200 rounded-xl p-2 px-4 mb-2 gap-2 items-center">
+            <div
+              key={cat._id}
+              className="flex bg-gray-200 rounded-xl p-2 px-4 mb-2 gap-2 items-center"
+            >
               <div className="grow hover:underline cursor-pointer">
                 {cat.name}
               </div>

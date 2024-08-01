@@ -29,7 +29,7 @@ export default function MenuItemsPage() {
 
   return (
     <section className="mt-8 max-w-lg mx-auto">
-      <UserTabs isAdmin={true} />
+      <UserTabs isAdmin={data.admin} />
       <div className="mt-8">
         <Link
           className="button bg-gray-200 hover:bg-red-200"
@@ -45,6 +45,7 @@ export default function MenuItemsPage() {
           {menuItems?.length > 0 &&
             menuItems.map((item) => (
               <Link
+                key={item._id}
                 href={'/menu-items/edit/' + item._id}
                 className="flex flex-col bg-gray-200 rounded-lg p-4 hover:bg-red-200"
               >

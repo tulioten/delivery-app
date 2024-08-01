@@ -1,16 +1,25 @@
 'use client'
 import { CartContext, cartProductPrice } from '@/components/AppContext'
 import SectionHeaders from '@/components/layout/SectionHeaders'
-import Trash from '@/components/icons/Trash'
-import Image from 'next/image'
 import { useContext, useEffect, useState } from 'react'
 import AddressInputs from '@/components/layout/AddressInputs'
 import { useProfile } from '@/components/UseProfile'
+import toast from 'react-hot-toast'
+import CartProduct from '@/components/menu/CartProduct'
+import generateKey from '@/libs/generateKey'
 
 export default function CartPage() {
   const { cartProducts, removeCartProducts } = useContext(CartContext)
   const [address, setAddress] = useState({})
   const { data: profileData } = useProfile()
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      if (window.location.href.includes('canceled=1')) {
+        toast.error('Payment failed :(')
+      }
+    }
+  }, [])
 
   useEffect(() => {
     if (profileData) {
@@ -26,71 +35,91 @@ export default function CartPage() {
     }
   }, [profileData])
 
-  let total = 0
+  let subtotal = 0
   for (const product of cartProducts) {
-    total += cartProductPrice(product)
+    subtotal += cartProductPrice(product)
   }
+  const delivery = 5
+
+  const total = subtotal + delivery
 
   function handleAddressChange(propName, value) {
     setAddress((prevAddress) => ({ ...prevAddress, [propName]: value }))
   }
+
+  async function proceedToCheckout(ev) {
+    ev.preventDefault()
+
+    // address and shopping cart products
+    const promise = new Promise((resolve, reject) => {
+      fetch('/api/checkout', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          address,
+          cartProducts,
+        }),
+      }).then(async (response) => {
+        if (response.ok) {
+          resolve()
+          window.location = await response.json()
+        } else {
+          reject(console.log('error'))
+        }
+      })
+    })
+
+    await toast.promise(promise, {
+      loading: 'Preparing your order...',
+      success: 'Redirecting to payment...',
+      error: 'Something went wrong.',
+    })
+  }
+
+  if (cartProducts?.length === 0) {
+    return (
+      <section className="mt-8 text-center">
+        <SectionHeaders mainHeader={'Cart'} />
+        <p className="mt-4">Your shopping cart is empty.</p>
+      </section>
+    )
+  }
+
   return (
     <section className="mt-8">
       <div className="text-center">
         <SectionHeaders mainHeader={'Cart'} />
       </div>
-      <div className="grid grid-cols-2 gap-8 mt-8">
+      {/* Left side - Product Info Section */}
+      <div className="sm:grid grid-cols-2 gap-8 mt-8">
         <div>
           {cartProducts?.length === 0 && <div>No products in your cart</div>}
           {cartProducts?.length > 0 &&
             cartProducts.map((product, index) => (
-              <div className="flex items-center gap-4 border-b py-4">
-                <div className="w-24">
-                  <Image width={240} height={240} src={product.image} alt="" />
-                </div>
-                <div className="grow">
-                  <h3 className="font-semibold">{product.name}</h3>
-                  {product.size && (
-                    <div className="text-sm text-gray-700">
-                      <div>Size:</div>
-                      <span className="text-xs ml-3 text-gray-500">
-                        {product.size.name}
-                      </span>
-                    </div>
-                  )}
-                  {product.extras?.length > 0 && (
-                    <div className="text-sm ">
-                      Extras:
-                      {product.extras.map((extra) => (
-                        <div className="text-xs ml-3 text-gray-400">
-                          {extra.name} ${extra.price}
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                </div>
-                <div className="text-lg font-semibold">
-                  ${cartProductPrice(product)}
-                </div>
-                <div className="ml-2">
-                  <button
-                    type="button"
-                    onClick={() => removeCartProducts(index)}
-                    className="p-2"
-                  >
-                    <Trash />
-                  </button>
-                </div>
-              </div>
+              <CartProduct
+                key={generateKey()}
+                product={product}
+                onRemove={removeCartProducts}
+                index={index}
+              />
             ))}
-          <div className="text-right py-2 pr-16">
-            <span className="text-gray-500">Subtotal: </span>
-            <span className="text-lg font-semibold pl-2">${total}</span>
+          <div className="py-2 pr-16 flex justify-end items-center">
+            <div className="text-gray-500">
+              Subtotal: <br />
+              Delivery: <br />
+              Total:
+            </div>
+            <div className="text-lg font-semibold pl-2">
+              ${subtotal}
+              <br />${delivery}
+              <br />${total}
+            </div>
           </div>
         </div>
+        {/* Right side - Address and Pay Section */}
         <div className="bg-gray-100 p-4 rounded-lg">
           <h2>Checkout</h2>
-          <form action="">
+          <form onSubmit={proceedToCheckout}>
             <AddressInputs
               addressProps={address}
               setAddressProps={{ handleAddressChange }}

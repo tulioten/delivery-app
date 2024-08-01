@@ -42,10 +42,10 @@ export default function MenuItemForm({ onSubmit, menuItem }) {
       className="mt-8 max-w-lg mx-auto"
     >
       <div
-        className="grid items-start gap-4"
+        className="md:grid items-start gap-4"
         style={{ gridTemplateColumns: '.3fr .7fr' }}
       >
-        <div>
+        <div className="max-w-[300px] mx-auto">
           <EditableImage link={image} setLink={setImage} />
         </div>
         <div className="grow">
@@ -69,7 +69,9 @@ export default function MenuItemForm({ onSubmit, menuItem }) {
           >
             {categories?.length > 0 &&
               categories.map((category) => (
-                <option value={category._id}>{category.name}</option>
+                <option key={category._id} value={category._id}>
+                  {category.name}
+                </option>
               ))}
           </select>
 

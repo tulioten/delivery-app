@@ -24,9 +24,9 @@ export default function UserForm({ user, onSave }) {
   }
 
   return (
-    <div className="flex gap-4">
+    <div className="sm:flex gap-4">
       <div>
-        <div className="p-2  rounded-lg relative">
+        <div className=" rounded-lg relative max-w-[220px] mx-auto">
           <EditableImage link={image} setLink={setImage} />
         </div>
       </div>
@@ -75,7 +75,7 @@ export default function UserForm({ user, onSave }) {
                 id="adminCb"
                 value={'1'}
                 checked={admin}
-                onClick={(ev) => setAdmin(ev.target.checked)}
+                onChange={(ev) => setAdmin(ev.target.checked)}
               />
               <span>Admin</span>
             </label>

@@ -28,11 +28,14 @@ export default function UsersPage() {
 
   return (
     <section className=" mt-8 max-w-lg mx-auto">
-      <UserTabs />
+      <UserTabs isAdmin={data.admin} />
       <div className="mt-8">
         {users?.length > 0 &&
           users.map((user) => (
-            <div className="flex bg-gray-200 rounded-lg px-4 p-1 mb-4 items-center justify-between">
+            <div
+              key={user._id}
+              className="flex bg-gray-200 rounded-lg px-4 p-1 mb-4 items-center justify-between"
+            >
               <div
                 className="grid grid-cols-2  grow"
                 style={{ gridTemplateColumns: '.3fr .7fr' }}
