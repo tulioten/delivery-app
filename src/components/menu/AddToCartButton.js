@@ -1,18 +1,14 @@
 import React from 'react'
 
-
 export default function AddToCartButton({
   hasSizesOrExtras,
   onClick,
   basePrice,
-  image,
 }) {
   if (!hasSizesOrExtras) {
     return (
       <div className="flying-button-parent w-full mt-4" onClick={onClick}>
-        <button>
-          Add to cart for ${basePrice}
-        </button>
+        <button>Add to cart for ${basePrice}</button>
       </div>
     )
   }
